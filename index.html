@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ==========================================================================
+         GRIDLI-POV — Artist Plein Air Precision Mobile Viewfinder
+         index.html
+         Markup only. Styling lives in assets/css/main.css; behavior lives in
+         assets/js/main.js (Master Protocol: Externalized CSS/JS Standard).
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GRIDLI-POV Artist Plein Air Precision Mobile Viewfinder</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+    <!-- Live viewfinder: camera/stream feed + crop mask + grid overlay -->
+    <div id="viewfinder-container">
+        <video id="webcam" autoplay playsinline muted></video>
+        <img id="stream-img" alt="" style="display:none;">
+        <div id="crop-box">
+            <div id="grid-overlay"></div>
+        </div>
+        <div id="camera-status"></div>
+    </div>
+
+    <!-- Top controls: refresh, grid color/toggle, source panel, line thickness -->
+    <div id="top-controls">
+        <div class="top-row">
+            <button id="refresh-btn">🔄 Refresh Camera</button>
+            <div style="display: flex; gap: 6px;">
+                <div class="color-picker-wrapper">
+                    <button class="color-btn" id="color-preview-btn">🎨 Color</button>
+                    <input type="color" id="grid-color" value="#ffffff">
+                </div>
+                <button id="grid-toggle" class="active-mode">Grid: ON</button>
+                <button id="source-toggle-btn">📡 Source</button>
+            </div>
+        </div>
+
+        <!-- Source panel: choose between browser camera, IP Webcam, or DroidCam -->
+        <div id="source-panel" class="hidden">
+            <div class="source-row">
+                <select id="source-type-select">
+                    <option value="browser">Browser Camera</option>
+                    <option value="ipwebcam">IP Webcam (Android)</option>
+                    <option value="droidcam">DroidCam (Android)</option>
+                </select>
+                <input type="text" id="stream-address" placeholder="192.168.1.42:8080 or 127.0.0.1:8080">
+                <button id="stream-connect-btn">Connect</button>
+            </div>
+            <div class="status-line">
+                <span class="status-dot offline" id="stream-status-dot"></span>
+                <span id="stream-status-text">Browser camera mode — no network address needed.</span>
+            </div>
+        </div>
+
+        <div class="slider-panel">
+            <span>Line Thickness:</span>
+            <input type="range" id="thickness-slider" min="1" max="5" value="1" step="1">
+            <span id="thickness-val">1px</span>
+        </div>
+    </div>
+
+    <!-- Bottom controls: canvas size, orientation, shutter -->
+    <div id="bottom-controls">
+        <div class="ui-row">
+            <select id="size-select">
+                <optgroup label="Squares (1:1)">
+                    <option value="8,8">8" x 8"</option>
+                    <option value="12,12">12" x 12"</option>
+                    <option value="16,16">16" x 16"</option>
+                    <option value="20,20">20" x 20"</option>
+                    <option value="24,24">24" x 24"</option>
+                </optgroup>
+                <optgroup label="Small / Sketch">
+                    <option value="4,5" selected>4" x 5"</option>
+                    <option value="5,7">5" x 7"</option>
+                    <option value="6,8">6" x 8"</option>
+                    <option value="8,10">8" x 10"</option>
+                    <option value="9,12">9" x 12"</option>
+                </optgroup>
+                <optgroup label="Medium Canvas">
+                    <option value="11,14">11" x 14"</option>
+                    <option value="12,16">12" x 16"</option>
+                    <option value="16,20">16" x 20"</option>
+                    <option value="18,24">18" x 24"</option>
+                    <option value="20,24">20" x 24"</option>
+                    <option value="24,30">24" x 30"</option>
+                </optgroup>
+                <optgroup label="Large / Studio">
+                    <option value="24,36">24" x 36"</option>
+                    <option value="30,40">30" x 40"</option>
+                    <option value="36,48">36" x 48"</option>
+                    <option value="40,60">40" x 60"</option>
+                    <option value="48,60">48" x 60"</option>
+                    <option value="60,84">60" x 84" (5x7 ft)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="ui-row">
+            <button id="orient-landscape">Landscape</button>
+            <button id="orient-portrait" class="active-mode">Portrait</button>
+        </div>
+
+        <button id="shutter-btn" aria-label="Take Screenshot"></button>
+    </div>
+
+    <!-- Off-screen canvas used only for compositing captured frames -->
+    <canvas id="capture-canvas"></canvas>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
